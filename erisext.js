@@ -2,7 +2,7 @@ const path = require("path");
 const fs = require("fs");
 
 const requireReload = require("require-reload")(require);
-const callerModule = require("caller-module");
+const GetCallerModule = require("caller-module").GetCallerModule();
 
 function setupExtension(bot, extpath) {
     bot.extensions = bot.extensions || {};
@@ -48,7 +48,7 @@ function init(Eris) {
         value: function(extname) {
             var bot = this;
 
-            var extpath = path.resolve([callerModule().path, extname]);
+            var extpath = path.resolve([GetCallerModule().path, extname]);
 
             setupExtension(bot, extpath);
 
@@ -67,7 +67,7 @@ function init(Eris) {
         value: function(extname) {
             var bot = this;
 
-            var extpath = path.resolve([callerModule().path, extname]);
+            var extpath = path.resolve([GetCallerModule().path, extname]);
 
             teardownExtension(bot, extpath);
             setupExtension(bot, extpath);
@@ -87,7 +87,7 @@ function init(Eris) {
         value: function(extname) {
             var bot = this;
 
-            var extpath = path.resolve([callerModule().path, extname]);
+            var extpath = path.resolve([GetCallerModule().path, extname]);
 
             teardownExtension(bot, extpath);
 
@@ -107,7 +107,7 @@ function init(Eris) {
             var bot = this;
 
 
-            var extdirpath = path.resolve([callerModule().path, extdir]);
+            var extdirpath = path.resolve([GetCallerModule().path, extdir]);
 
             var files = fs.readdirSync(extdirpath);
             files = files.filter(f => path.extname(f) === ".js");
