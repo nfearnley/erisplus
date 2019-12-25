@@ -25,7 +25,6 @@
   "homepage": "https://github.com/nfearnley/erisplus#readme",
   "dependencies": {
     "caller-module": "^1.0.4",
-    "eris": "^0.11.1",
     "glob": "^7.1.6",
     "loglevel": "^1.6.6",
     "require-reload": "^0.2.2"
