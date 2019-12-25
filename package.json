@@ -1,0 +1,36 @@
+{
+  "name": "erisplus",
+  "version": "1.0.0",
+  "description": "Additional features for the Eris NodeJS Discord library",
+  "main": "erisplus.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nfearnley/erisplus.git"
+  },
+  "keywords": [
+    "api",
+    "discord",
+    "discordapp",
+    "eris",
+    "bot"
+  ],
+  "author": "Natalie Fearnley",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/nfearnley/erisplus/issues"
+  },
+  "homepage": "https://github.com/nfearnley/erisplus#readme",
+  "dependencies": {
+    "eris": "^0.11.1",
+    "glob": "^7.1.6",
+    "loglevel": "^1.6.6",
+    "require-reload": "^0.2.2"
+  },
+  "devDependencies": {
+    "eslint": "^6.7.2",
+    "jsdoc": "^3.6.3"
+  }
+}
