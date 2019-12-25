@@ -12,7 +12,7 @@ function getCallerPath() {
         n++;
         callerpath = caller(n);
     }
-    return callerpath;
+    return path.dirname(callerpath);
 }
 
 function getExtPath(extname) {
@@ -28,10 +28,6 @@ function setupExtension(bot, extname) {
 
     if (bot.extensions[extpath]) {
         throw new Error(`Extension ${extpath} already loaded.`);
-    }
-
-    if (extpath) {
-        throw new Error(`Extension ${extpath} not found.`);
     }
 
     var extension = requireReload(extpath);
