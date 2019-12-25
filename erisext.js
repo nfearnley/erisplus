@@ -2,10 +2,29 @@ const path = require("path");
 const fs = require("fs");
 
 const requireReload = require("require-reload")(require);
-const callerModule = require('caller-module').GetCallerModule;
+var caller = require("caller");
 
-function setupExtension(bot, extpath) {
+// Walk up the call chain until we end up outside this module
+function getCallerPath() {
+    var callerpath;
+    var n = 1;
+    while (!callerpath || callerpath === module.filename) {
+        n++;
+        callerpath = caller(n);
+    }
+    return callerpath;
+}
+
+function getExtPath(extname) {
+    var callerpath = getCallerPath();
+    var extpath = path.resolve(callerpath, extname);
+    return extpath;
+}
+
+function setupExtension(bot, extname) {
     bot.extensions = bot.extensions || {};
+
+    extpath = getExtPath(extname);
 
     if (bot.extensions[extpath]) {
         throw new Error(`Extension ${extpath} already loaded.`);
@@ -24,8 +43,10 @@ function setupExtension(bot, extpath) {
     return extension;
 }
 
-function teardownExtension(callerbot, extpath) {
+function teardownExtension(bot, extname) {
     bot.extensions = bot.extensions || {};
+
+    extpath = getExtPath(extname);
 
     if (!bot.extensions[extpath]) {
         throw new Error(`Extension ${extpath} not yet loaded.`);
@@ -47,11 +68,7 @@ function init(Eris) {
     Object.defineProperty(Eris.Client.prototype, "loadExtension", {
         value: function(extname) {
             var bot = this;
-
-            var extpath = path.resolve([callerModule().path, extname]);
-
-            setupExtension(bot, extpath);
-
+            setupExtension(bot, extname);
             return bot;
         }
     });
@@ -66,12 +83,8 @@ function init(Eris) {
     Object.defineProperty(Eris.Client.prototype, "reloadExtension", {
         value: function(extname) {
             var bot = this;
-
-            var extpath = path.resolve([callerModule().path, extname]);
-
-            teardownExtension(bot, extpath);
-            setupExtension(bot, extpath);
-
+            teardownExtension(bot, extname);
+            setupExtension(bot, extname);
             return bot;
         }
     });
@@ -86,11 +99,7 @@ function init(Eris) {
     Object.defineProperty(Eris.Client.prototype, "unloadExtension", {
         value: function(extname) {
             var bot = this;
-
-            var extpath = path.resolve([callerModule().path, extname]);
-
-            teardownExtension(bot, extpath);
-
+            teardownExtension(bot, extname);
             return bot;
         }
     });
@@ -106,13 +115,12 @@ function init(Eris) {
         value: function(extdir) {
             var bot = this;
 
-
-            var extdirpath = path.resolve([callerModule().path, extdir]);
+            var extdirpath = getExtPath(extdir);
 
             var files = fs.readdirSync(extdirpath);
             files = files.filter(f => path.extname(f) === ".js");
-            files = files.map(f => path.resolve([extdirpath, f]));
-            files.foreach(function(extpath) {
+            files = files.map(f => path.resolve(extdirpath, f));
+            files.forEach(function(extpath) {
                 setupExtension(bot, extpath);
             });
 
