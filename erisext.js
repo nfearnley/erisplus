@@ -61,7 +61,7 @@ function getCallerPath() {
 function getExtPath(extname) {
     var callerpath = getCallerPath();
     var extpath = path.resolve(callerpath, extname);
-    extpath = path.join(path.dirname(extpath), path.basename(extpath));
+    extpath = path.join(path.dirname(extpath), path.basename(extpath, ".js"));
     return extpath;
 }
 
